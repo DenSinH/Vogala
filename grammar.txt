@@ -1,0 +1,13 @@
+program:
+    |compound statement
+
+compound statement:
+    |statement*
+    |TERWIJL; condition; compound statement; EIND TERWIJL
+
+statement:
+    |assignment     id IS expr
+    |PRINT expr
+
+expr:
+    |(id|value) (OP (id|value))?

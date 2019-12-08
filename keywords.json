@@ -1,0 +1,31 @@
+{
+  "+": "PLUS",
+  "MET": "PLUS",
+  "PLUS": "PLUS",
+
+  "-": "MINUS",
+  "MIN": "MINUS",
+  "ZONDER": "MINUS",
+
+  "IS": "ASSIGN",
+  "WAS": "ASSIGN",
+  "BEN": "ASSIGN",
+  "ZIJN": "ASSIGN",
+  "WAREN": "ASSIGN",
+
+  "*": "MUL",
+  "KEER": "MUL",
+
+  "/": "DIV",
+  "GEDEELD DOOR": "DIV",
+
+  "ZEG": "PRINT",
+  "PRINT": "PRINT",
+  "ROEP": "PRINT",
+  "FLUISTER": "PRINT",
+
+  ".": "END",
+  ";": "END",
+  ":": "END",
+  "?": "END"
+}
