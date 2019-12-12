@@ -28,6 +28,7 @@ class Interpreter(object):
             new_prev = __Prev__()
             for child in node.children:
                 self.visit(child, new_prev, new_scope)
+            print("Compound end:", new_scope)
         elif isinstance(node, Print):
             print(self.visit(node.val, prev, scope))
         elif isinstance(node, Assign):
@@ -50,7 +51,11 @@ class Interpreter(object):
 
         elif isinstance(node, BinOp):
             if node.op == "ADD":
-                return self.visit(node.left, prev, scope) + self.visit(node.right, prev, scope)
+                val = self.visit(node.left, prev, scope)
+                if isinstance(val, int) and not isinstance(val, bool):
+                    return val + self.visit(node.right, prev, scope)
+                else:
+                    return val and self.visit(node.right, prev, scope)
             elif node.op == "SUB":
                 return self.visit(node.left, prev, scope) - self.visit(node.right, prev, scope)
             elif node.op == "MUL":
@@ -59,6 +64,12 @@ class Interpreter(object):
                 return self.visit(node.left, prev, scope) / self.visit(node.right, prev, scope)
             elif node.op == "OR":
                 return self.visit(node.left, prev, scope) | self.visit(node.right, prev, scope)
+            elif node.op == "LT":
+                return self.visit(node.left, prev, scope) < self.visit(node.right, prev, scope)
+            elif node.op == "GT":
+                return self.visit(node.left, prev, scope) > self.visit(node.right, prev, scope)
+            elif node.op == "EQ":
+                return self.visit(node.left, prev, scope) == self.visit(node.right, prev, scope)
             else:
                 raise Exception(f"Operation not added for BinOp: {node.op}")
         elif isinstance(node, UnOp):

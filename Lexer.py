@@ -114,7 +114,7 @@ class Lexer(object):
 
         while True:
             factor = []
-            while self.kws.get(self.current) not in BINOP + UNOP + ENDING:
+            while self.kws.get(self.current) not in STRONGOP + WEAKOP + UNOP + ENDING:
                 factor.append(self.current)
                 self.advance()
 

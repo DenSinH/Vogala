@@ -118,8 +118,8 @@ class Compound(Node):
         self.children = list(children)
 
     def __str__(self):
-        children = ",\n".join(str(child).replace("\n", "\n    ") for child in self.children)
-        return "Compound(\n{0}\n)".format(children)
+        children = ",\n    ".join(str(child).replace("    ", "        ") for child in self.children)
+        return "Compound(\n    {0}\n    )".format(children)
 
     def __repr__(self):
         return str(self)

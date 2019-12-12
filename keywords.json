@@ -24,6 +24,31 @@
 
   "OF": "OR",
 
+  "IS KLEINER DAN": "LT",
+  "IS ZWAKKER DAN": "LT",
+  "IS MINDER DAN": "LT",
+  "IS SLECHTER DAN": "LT",
+  "KLEINER IS DAN": "LT",
+  "ZWAKKER IS DAN": "LT",
+  "MINDER IS DAN": "LT",
+  "SLECHTER IS DAN": "LT",
+  "<": "LT",
+
+  "IS GROTER DAN": "GT",
+  "IS STERKER DAN": "GT",
+  "IS MEER DAN": "GT",
+  "IS BETER DAN": "GT",
+  "GROTER IS DAN": "GT",
+  "STERKER IS DAN": "GT",
+  "MEER IS DAN": "GT",
+  "BETER IS DAN": "GT",
+  ">": "GT",
+
+  "LIJKT OP": "EQ",
+  "==": "EQ",
+  "IS GELIJK AAN": "EQ",
+  "GELIJK IS AAN": "EQ",
+
   "IS": "OBJ ASSIGN",
   "WAS": "OBJ ASSIGN",
   "BEN": "OBJ ASSIGN",
@@ -35,13 +60,11 @@
   "HADDEN": "OBJ ASSIGN",
   "HAD": "OBJ ASSIGN",
 
-  "ZEG": "STR ASSIGN",
   "ZEGT": "STR ASSIGN",
   "ZEGGEN": "STR ASSIGN",
   "ZEI": "STR ASSIGN",
   "ZEIDEN": "STR ASSIGN",
 
-  "ZEG DAT": "STR ASSIGN",
   "ZEGT DAT": "STR ASSIGN",
   "ZEGGEN DAT": "STR ASSIGN",
   "ZEI DAT": "STR ASSIGN",
@@ -51,6 +74,8 @@
   "ROEP": "PRINT",
   "FLUISTER": "PRINT",
   "SCHREEUW": "PRINT",
+  "ZEG DAT": "PRINT",
+  "ZEG": "PRINT",
 
   "...": "LOCAL END",
   "!": "LOCAL END",

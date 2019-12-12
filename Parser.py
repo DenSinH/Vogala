@@ -58,13 +58,24 @@ class Parser(object):
             raise Exception(f"Unexpected token: {self.current}, expected one of {UNOP + FACTORS}")
         return node
 
-    def expr(self):
+    def weak(self):
+        node = self.strong()
+
+        while self.current.typ not in ENDING:
+            op = self.current.typ
+
+            self.expect(*WEAKOP)
+            node = BinOp(node, op, self.weak())
+
+        return node
+
+    def strong(self):
         left = self.factor()
         op = self.current.typ
-        if op in BINOP:
-            self.expect(*BINOP)
-            return BinOp(left, op, self.expr())
-        elif op in ENDING:
+        if op in STRONGOP:
+            self.expect(*STRONGOP)
+            return BinOp(left, op, self.strong())
+        elif op in ENDING + WEAKOP:
             return left
         else:
             raise Exception(f"Invalid Syntax near {self.current.val}")
@@ -74,12 +85,12 @@ class Parser(object):
             left = self.variable()
             op = self.current.typ
             self.expect(*ASSIGNMENT)
-            return Assign(left, op, self.expr())
+            return Assign(left, op, self.weak())
         elif self.current.typ == "PRINT":
             self.expect("PRINT")
-            return Print(self.expr())
+            return Print(self.weak())
         elif self.current.typ in FACTORS:
-            return self.expr()
+            return self.weak()
         else:
             raise Exception(f"Syntax error near {self.current.val}")
 
