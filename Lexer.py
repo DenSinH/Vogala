@@ -71,7 +71,11 @@ class Lexer(object):
                     tokens += self.expr()
                     continue
 
-                tokens.append(Token("ID", self.id()))
+                name = self.id()
+                if name in VARS["PREV"]:
+                    tokens.append(Token("PREV", None))
+                else:
+                    tokens.append(Token("ID", name))
                 tokens.append(Token(self.kws[self.current], self.current))
 
                 if self.kws[self.current] == "OBJ ASSIGN":
@@ -127,7 +131,6 @@ class Lexer(object):
                 factor.append(self.current)
                 self.advance()
 
-            print("FACTOR", factor, any(factor))
             if any(factor):
                 expr.append(Token("OBJ", " ".join(factor)))
 

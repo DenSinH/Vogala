@@ -31,6 +31,11 @@ class Parser(object):
         self.expect("ID")
         return node
 
+    def prev(self):
+        node = Prev(self.current.val)
+        self.expect("PREV")
+        return node
+
     def factor(self):
         if self.current.typ in UNOP:
             op = self.current.typ
@@ -83,6 +88,11 @@ class Parser(object):
     def statement(self):
         if self.current.typ == "ID":
             left = self.variable()
+            op = self.current.typ
+            self.expect(*ASSIGNMENT)
+            return Assign(left, op, self.weak())
+        elif self.current.typ == "PREV":
+            left = self.prev()
             op = self.current.typ
             self.expect(*ASSIGNMENT)
             return Assign(left, op, self.weak())

@@ -33,12 +33,14 @@ class Interpreter(object):
         elif isinstance(node, Print):
             print(self.visit(node.val, prev, scope))
         elif isinstance(node, Assign):
-            if not isinstance(node.left, Var) or isinstance(node.left, Prev):
+            if not (isinstance(node.left, Var) or isinstance(node.left, Prev)):
                 # this cannot happen if the lexer and the parser are programmed correctly...
                 raise Exception(f"Invalid assignment variable: {node.left}")
 
             if isinstance(node.left, Prev):
                 node.left.name = prev.val
+
+            prev.val = node.left.name
 
             if node.op in ["STR ASSIGN", "INT ASSIGN", "OBJ ASSIGN"]:
                 scope[node.left.name] = self.visit(node.right, prev, scope)
@@ -48,7 +50,6 @@ class Interpreter(object):
                 scope[node.left.name] -= self.visit(node.right, prev, scope)
             else:
                 raise Exception(f"Operation not added for Assign: {node.op}")
-            prev.val = node.left.name
 
         elif isinstance(node, BinOp):
             if node.op == "ADD":
@@ -73,6 +74,7 @@ class Interpreter(object):
                 return self.visit(node.left, prev, scope) == self.visit(node.right, prev, scope)
             else:
                 raise Exception(f"Operation not added for BinOp: {node.op}")
+
         elif isinstance(node, UnOp):
             if node.op == "NOT":
                 val = self.visit(node.right, prev, scope)
