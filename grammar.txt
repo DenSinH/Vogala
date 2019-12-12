@@ -1,13 +1,16 @@
 program:
-    |compound statement
+    |compound statement*
 
 compound statement:
     |statement*
-    |TERWIJL; condition; compound statement; EIND TERWIJL
+    |WHILE; condition; compound statement; ...
 
 statement:
-    |assignment     id IS expr
+    |assignment     id (VAR ASSIGN|STR ASSIGN) expr
     |PRINT expr
 
+OP:
+    |ADD|SUB|MUL|DIV|OR
+
 expr:
-    |(id|value) (OP (id|value))?
+    |NOT? (id|value) (OP NOT? (id|value))*

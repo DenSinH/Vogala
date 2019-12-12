@@ -1,0 +1,32 @@
+{
+  "BOOL": {
+    "WAAR": true,
+    "GELIJK": true,
+
+    "ONWAAR": false,
+    "ONGELIJK": false
+  },
+
+  "INT": {
+    "NIETS": 0,
+    "WAARDELOOS": 0,
+    "NIKS": 0,
+    "NUL": 0,
+    "LEEG": 0,
+
+    "EENZAAM": 1,
+    "ALLEEN": 1,
+    "EEN": 1
+  },
+
+  "PREV": {
+    "HIJ": null,
+    "ZIJ": null,
+    "HET": null,
+    "ZE": null,
+    "WIJ": null,
+    "JULLIE": null,
+    "HEM": null,
+    "HAAR": null
+  }
+}

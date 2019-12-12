@@ -1,28 +1,59 @@
 {
-  "+": "PLUS",
-  "MET": "PLUS",
-  "PLUS": "PLUS",
+  "+": "ADD",
+  "MET": "ADD",
+  "PLUS": "ADD",
+  "EN": "ADD",
 
-  "-": "MINUS",
-  "MIN": "MINUS",
-  "ZONDER": "MINUS",
+  "IS MET": "IADD",
 
-  "IS": "ASSIGN",
-  "WAS": "ASSIGN",
-  "BEN": "ASSIGN",
-  "ZIJN": "ASSIGN",
-  "WAREN": "ASSIGN",
+  "-": "SUB",
+  "MIN": "SUB",
+  "ZONDER": "SUB",
+
+  "IS ZONDER": "ISUB",
 
   "*": "MUL",
   "KEER": "MUL",
+  "MAAL": "MUL",
 
   "/": "DIV",
   "GEDEELD DOOR": "DIV",
 
-  "ZEG": "PRINT",
+  "NIET": "NOT",
+  "GEEN": "NOT",
+
+  "OF": "OR",
+
+  "IS": "OBJ ASSIGN",
+  "WAS": "OBJ ASSIGN",
+  "BEN": "OBJ ASSIGN",
+  "ZIJN": "OBJ ASSIGN",
+  "WAREN": "OBJ ASSIGN",
+
+  "HEEFT": "OBJ ASSIGN",
+  "HEB": "OBJ ASSIGN",
+  "HADDEN": "OBJ ASSIGN",
+  "HAD": "OBJ ASSIGN",
+
+  "ZEG": "STR ASSIGN",
+  "ZEGT": "STR ASSIGN",
+  "ZEGGEN": "STR ASSIGN",
+  "ZEI": "STR ASSIGN",
+  "ZEIDEN": "STR ASSIGN",
+
+  "ZEG DAT": "STR ASSIGN",
+  "ZEGT DAT": "STR ASSIGN",
+  "ZEGGEN DAT": "STR ASSIGN",
+  "ZEI DAT": "STR ASSIGN",
+  "ZEIDEN DAT": "STR ASSIGN",
+
   "PRINT": "PRINT",
   "ROEP": "PRINT",
   "FLUISTER": "PRINT",
+  "SCHREEUW": "PRINT",
+
+  "...": "LOCAL END",
+  "!": "LOCAL END",
 
   ".": "END",
   ";": "END",
