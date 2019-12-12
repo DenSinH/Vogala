@@ -5,6 +5,7 @@
   "EN": "ADD",
 
   "IS MET": "IADD",
+  "IS SAMEN MET": "IADD",
 
   "-": "SUB",
   "MIN": "SUB",

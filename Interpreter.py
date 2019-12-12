@@ -20,6 +20,7 @@ class Interpreter(object):
 
     def __init__(self):
         self.parser = Parser()
+        pprint(self.parser.tokens)
         self.tree = self.parser.program()
 
     def visit(self, node, prev, scope):

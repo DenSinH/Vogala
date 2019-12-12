@@ -99,27 +99,38 @@ class Lexer(object):
 
         return name.strip()
 
-    def string(self):
+    def string(self, start=None):
         s = []
-        while self.kws.get(self.current) not in ENDING:
+        while (start is None and self.kws.get(self.current) not in ENDING) or self.current != start:
             s.append(self.current)
             self.advance()
 
-        end = Token(self.kws[self.current], self.current)
+        if start is None:
+            end = Token(self.kws[self.current], self.current)
+            self.advance()
+            return [Token("STR", " ".join(s)), end]
+
         self.advance()
-        return [Token("STR", " ".join(s)), end]
+        return Token("STR", " ".join(s))
 
     def expr(self):
         expr = []
 
         while True:
             factor = []
+            if self.current in "'\"":
+                start = str(self.current)
+                self.advance()
+                expr.append(self.string(start))
+
             while self.kws.get(self.current) not in STRONGOP + WEAKOP + UNOP + ENDING:
                 factor.append(self.current)
                 self.advance()
 
+            print("FACTOR", factor, any(factor))
             if any(factor):
                 expr.append(Token("OBJ", " ".join(factor)))
+
             expr.append(Token(self.kws[self.current], self.current))
             if self.kws[self.current] in ["END", "LOCAL END"]:
                 self.advance()
