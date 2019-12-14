@@ -11,7 +11,7 @@ ENDING = ["END", "LOCAL END"]
 STRONGOP = ["DIV", "MUL", "LT", "GT", "EQ"]
 WEAKOP = ["OR", "ADD", "SUB", "AND"]
 UNOP = ["NOT"]
-OPENERS = ["PRINT", "WHILE"]
+OPENERS = ["PRINT", "WHILE", "IF", "ELSE"]
 LOOPING = ["GOES", "FROM", "TO", "DO"]
 FACTORS = ["OBJ", "STR", "INT", "REAL", "VAR", "BOOL", "PREV"]
 

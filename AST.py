@@ -143,6 +143,17 @@ class For(Node):
         return f"For({self.var.name} FROM {self.start} TO {self.end}: {self.child})"
 
 
+class If(Node):
+
+    def __init__(self, condition, child, alternative):
+        self.condition = condition
+        self.child = child
+        self.alternative = alternative
+
+    def __str__(self):
+        return f"If({self.condition}\n    ? {self.child}\n    : {self.alternative})"
+
+
 class Compound(Node):
 
     def __init__(self, *children):

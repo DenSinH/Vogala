@@ -1,22 +1,11 @@
-Peter is niets.
-Klaas is jong.
-zeg dat hij gelijk is aan vier en peter kleiner is dan klaas.
-t = nul, nul.
-print t.
+a = 1;
+b = 2;
 
-terwijl peter kleiner is dan klaas gebeurde er dit:
-    zeg "while loop".
+terwijl a < b:
+    print a;
+    a += 1!
 
-    iemand loopt van huis naar zijn werk.
-        zeg het.
-        zeg "".
-        een man loopt naar huis.
-            zeg een man!
-        zeg ""!
-
-    peter is met een...
-
-hij is nu elf.
-zeg het.
-
-zeg "Hallo wereld!".
+als a < 2:
+    print a!
+anders:
+    print "niet waar!"!

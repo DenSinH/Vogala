@@ -60,26 +60,31 @@ class Lexer(object):
         while self.current is not None:
 
             if self.kws.get(self.current) in OPENERS:
-                if self.kws.get(self.current) == "PRINT":
+                if self.kws[self.current] == "PRINT":
                     tokens.append(Token(self.kws[self.current], self.current))
                     self.advance()
 
                     tokens += self.expr()
 
-                elif self.kws.get(self.current) == "WHILE":
+                elif self.kws[self.current] == "WHILE":
                     tokens.append(Token(self.kws[self.current], self.current))
                     self.advance()
 
                     tokens += self.expr()
 
-                    if self.kws.get(self.current) != "DO":
-                        raise Exception(f"Expected DO keyword, got {self.current}")
+                    if self.kws.get(self.current) == "DO":
+                        tokens.append(Token(self.kws[self.current], self.current))
+                        self.advance()
 
+                elif self.kws[self.current] == "IF":
                     tokens.append(Token(self.kws[self.current], self.current))
                     self.advance()
 
-                    if self.kws[self.current] not in ENDING:
-                        raise Exception(f"Expected statement end at {self.current}")
+                    tokens += self.expr()
+
+                elif self.kws[self.current] == "ELSE":
+                    tokens.append(Token(self.kws[self.current], self.current))
+                    self.advance()
 
                 else:
                     raise Exception(f"No opening statement added for {self.current}")
@@ -151,6 +156,8 @@ class Lexer(object):
                 if self.kws[self.current] in ENDING:
                     tokens.append(Token(self.kws[self.current], self.current))
                     self.advance()
+                    while self.kws.get(self.current) in ENDING:
+                        self.advance()
                 else:
                     raise Exception(f"Expected statement end after {self.current}")
 

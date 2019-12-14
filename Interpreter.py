@@ -29,7 +29,6 @@ class Interpreter(object):
                 self.visit(child, prev, scope)
         elif isinstance(node, While):
             while self.visit(node.condition, prev, scope):
-                pprint(scope)
                 self.visit(node.child, prev, scope)
 
         elif isinstance(node, For):
@@ -46,6 +45,11 @@ class Interpreter(object):
                 prev.val = node.var.name
                 self.visit(node.child, prev, scope)
                 scope[node.var.name] += 1
+        elif isinstance(node, If):
+            if self.visit(node.condition, prev, scope):
+                self.visit(node.child, prev, scope)
+            else:
+                self.visit(node.alternative, prev, scope)
 
         elif isinstance(node, Print):
             print(self.visit(node.val, prev, scope))

@@ -110,18 +110,35 @@ class Parser(object):
             else:
                 raise Exception(f"Expected one of {', '.join(ASSIGNMENT)} or GOES, got {self.current.typ}, {self.current.val}")
 
+        elif self.current.typ == "IF":
+            self.expect("IF")
+            condition = self.weak()
+            self.expect("END")
+            child = self.compound_statement()
+
+            alternative = None
+            if self.current.typ == "ELSE":
+                self.expect("ELSE")
+                self.expect("END")
+                alternative = self.compound_statement()
+
+            return If(condition, child, alternative)
+
         elif self.current.typ == "PREV":
             left = self.prev()
             op = self.current.typ
             self.expect(*ASSIGNMENT)
             return Assign(left, op, self.weak())
+
         elif self.current.typ == "PRINT":
             self.expect("PRINT")
             return Print(self.weak())
+
         elif self.current.typ == "WHILE":
             self.expect("WHILE")
             condition = self.weak()
-            self.expect("DO")
+            if self.current.typ == "DO":
+                self.expect("DO")
             self.expect("END")
             return While(condition, self.compound_statement())
 

@@ -5,12 +5,14 @@
 
   "IS MET": "IADD",
   "IS SAMEN MET": "IADD",
+  "+=": "IADD",
 
   "-": "SUB",
   "MIN": "SUB",
   "ZONDER": "SUB",
 
   "IS ZONDER": "ISUB",
+  "-=": "ISUB",
 
   "*": "MUL",
   "KEER": "MUL",
@@ -80,10 +82,20 @@
   "ZEG DAT": "PRINT",
   "ZEG": "PRINT",
 
+  "ALS": "IF",
+
+  "ANDERS": "ELSE",
+
   "TERWIJL": "WHILE",
 
+  "GEBEURT ER DIT": "DO",
   "GEBEURDE ER DIT": "DO",
+  "DOET HIJ DIT": "DO",
+  "DOET ZIJ DIT": "DO",
+  "DOEN ZIJ DIT": "DO",
   "DEED HIJ DIT": "DO",
+  "DEED ZIJ DIT": "DO",
+  "DEDEN ZIJ DIT": "DO",
 
   "GAAT": "GOES",
   "GAAN": "GOES",
