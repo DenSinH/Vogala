@@ -71,6 +71,15 @@ class Int(Node):
         return f"Int({self.val})"
 
 
+class Real(Node):
+
+    def __init__(self, val):
+        self.val = val
+
+    def __str__(self):
+        return f"Real({self.val})"
+
+
 class String(Node):
 
     def __init__(self, val):
@@ -110,6 +119,28 @@ class Prev(Node):
         if prev.val is None:
             raise Exception("No variable was accessed before")
         return kwargs[prev.val]
+
+
+class While(Node):
+
+    def __init__(self, condition, child):
+        self.condition = condition
+        self.child = child
+
+    def __str__(self):
+        return f"While({self.condition}: \n    {self.child}\n    )"
+
+
+class For(Node):
+
+    def __init__(self, var, start, end, child):
+        self.var = var
+        self.start = start or Int(0)
+        self.end = end
+        self.child = child
+
+    def __str__(self):
+        return f"For({self.var.name} FROM {self.start} TO {self.end}: {self.child})"
 
 
 class Compound(Node):

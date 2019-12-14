@@ -1,16 +1,17 @@
 program:
     |compound statement*
+    |id GOES ?(FROM int expr) TO int expr END compound statement...
+    |WHILE condition DO END(:)
 
 compound statement:
-    |statement*
-    |WHILE; condition; compound statement; ...
+    |statement* END
 
 statement:
-    |assignment     id (VAR ASSIGN|STR ASSIGN) expr
+    |assignment     id (OBJ ASSIGN|STR ASSIGN) expr
     |PRINT expr
 
 OP:
-    |ADD|SUB|MUL|DIV|OR
+    |ADD|SUB|MUL|DIV|OR|AND
 
 expr:
     |NOT? (id|value) (OP NOT? (id|value))*

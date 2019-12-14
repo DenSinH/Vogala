@@ -9,10 +9,11 @@ with open("vars.json", "r") as f:
 ASSIGNMENT = ["OBJ ASSIGN", "STR ASSIGN", "IADD", "ISUB"]
 ENDING = ["END", "LOCAL END"]
 STRONGOP = ["DIV", "MUL", "LT", "GT", "EQ"]
-WEAKOP = ["OR", "ADD", "SUB"]
+WEAKOP = ["OR", "ADD", "SUB", "AND"]
 UNOP = ["NOT"]
-OPENERS = ["PRINT"]
-FACTORS = ["OBJ", "STR", "INT", "VAR", "BOOL", "PREV"]
+OPENERS = ["PRINT", "WHILE"]
+LOOPING = ["GOES", "FROM", "TO", "DO"]
+FACTORS = ["OBJ", "STR", "INT", "REAL", "VAR", "BOOL", "PREV"]
 
 
 def split(kw):
@@ -30,6 +31,19 @@ class Token(object):
             elif re.match(r"^\d*$", val):
                 self.typ = "INT"
                 self.val = int(val)
+            elif re.match(r".*,.*", val) and not re.match(r".*,.*,.*", val):
+                self.typ = "REAL"
+                v = ""
+                for part in split(val):
+                    if part == ",":
+                        v += "."
+                    else:
+                        if part in VARS["INT"]:
+                            v += str(VARS["INT"][part])
+                        else:
+                            v += str(len(part) % 10)
+
+                self.val = float(v)
             else:
                 for TYP in VARS:
                     if val in VARS[TYP]:

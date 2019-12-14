@@ -2,7 +2,6 @@
   "+": "ADD",
   "MET": "ADD",
   "PLUS": "ADD",
-  "EN": "ADD",
 
   "IS MET": "IADD",
   "IS SAMEN MET": "IADD",
@@ -22,6 +21,8 @@
 
   "NIET": "NOT",
   "GEEN": "NOT",
+
+  "EN": "AND",
 
   "OF": "OR",
 
@@ -50,6 +51,7 @@
   "IS GELIJK AAN": "EQ",
   "GELIJK IS AAN": "EQ",
 
+  "=": "OBJ ASSIGN",
   "IS": "OBJ ASSIGN",
   "WAS": "OBJ ASSIGN",
   "BEN": "OBJ ASSIGN",
@@ -77,6 +79,27 @@
   "SCHREEUW": "PRINT",
   "ZEG DAT": "PRINT",
   "ZEG": "PRINT",
+
+  "TERWIJL": "WHILE",
+
+  "GEBEURDE ER DIT": "DO",
+  "DEED HIJ DIT": "DO",
+
+  "GAAT": "GOES",
+  "GAAN": "GOES",
+  "GING": "GOES",
+  "GINGEN": "GOES",
+  "LOOPT": "GOES",
+  "LOPEN": "GOES",
+  "LIEP": "GOES",
+  "LIEPEN": "GOES",
+
+  "VAN": "FROM",
+  "VANAF": "FROM",
+
+  "NAAR": "TO",
+  "TOT": "TO",
+  "RICHTING": "TO",
 
   "...": "LOCAL END",
   "!": "LOCAL END",

@@ -25,11 +25,28 @@ class Interpreter(object):
 
     def visit(self, node, prev, scope):
         if isinstance(node, Compound):
-            new_scope = dict(scope)
-            new_prev = __Prev__()
             for child in node.children:
-                self.visit(child, new_prev, new_scope)
-            print("Compound end:", new_scope)
+                self.visit(child, prev, scope)
+        elif isinstance(node, While):
+            while self.visit(node.condition, prev, scope):
+                pprint(scope)
+                self.visit(node.child, prev, scope)
+
+        elif isinstance(node, For):
+            if node.start is not None:
+                scope[node.var.name] = self.visit(node.start, prev, scope)
+                start = self.visit(node.start, prev, scope)
+            else:
+                scope[node.var.name] = 0
+                start = 0
+
+            end = self.visit(node.end, prev, scope)
+
+            for i in range(start, end):
+                prev.val = node.var.name
+                self.visit(node.child, prev, scope)
+                scope[node.var.name] += 1
+
         elif isinstance(node, Print):
             print(self.visit(node.val, prev, scope))
         elif isinstance(node, Assign):
@@ -66,6 +83,8 @@ class Interpreter(object):
                 return self.visit(node.left, prev, scope) / self.visit(node.right, prev, scope)
             elif node.op == "OR":
                 return self.visit(node.left, prev, scope) | self.visit(node.right, prev, scope)
+            elif node.op == "AND":
+                return self.visit(node.left, prev, scope) & self.visit(node.right, prev, scope)
             elif node.op == "LT":
                 return self.visit(node.left, prev, scope) < self.visit(node.right, prev, scope)
             elif node.op == "GT":
@@ -89,6 +108,8 @@ class Interpreter(object):
             return node.val
         elif isinstance(node, Int):
             return node.val
+        elif isinstance(node, Real):
+            return node.val
         elif isinstance(node, Object):
             return node.get(prev, **scope)
         elif isinstance(node, Var):
@@ -100,13 +121,16 @@ class Interpreter(object):
             raise Exception(f"Node type not added: {type(node)}")
 
     def run(self):
-        prev = None
-        self.visit(self.tree, prev, {})
+        prev = __Prev__()
+        scope = {}
+        self.visit(self.tree, prev, scope)
+
+        print("---------------------------END------------------------------")
+        pprint(scope)
 
 
 if __name__ == '__main__':
     interpreter = Interpreter()
-    pprint(interpreter.parser.tokens)
     print(interpreter.tree)
 
     print("---------------------------RUN------------------------------")

@@ -50,6 +50,10 @@ class Lexer(object):
             cur += 1
         return self.get_after(cur)
 
+    def check_name(self, name):
+        if name in self.kws:
+            raise Exception(f"Variable name not allowed: {name}, reserved keyword.")
+
     def tokenize(self):
         tokens = []
 
@@ -62,46 +66,110 @@ class Lexer(object):
 
                     tokens += self.expr()
 
+                elif self.kws.get(self.current) == "WHILE":
+                    tokens.append(Token(self.kws[self.current], self.current))
+                    self.advance()
+
+                    tokens += self.expr()
+
+                    if self.kws.get(self.current) != "DO":
+                        raise Exception(f"Expected DO keyword, got {self.current}")
+
+                    tokens.append(Token(self.kws[self.current], self.current))
+                    self.advance()
+
+                    if self.kws[self.current] not in ENDING:
+                        raise Exception(f"Expected statement end at {self.current}")
+
+                else:
+                    raise Exception(f"No opening statement added for {self.current}")
+
+                if self.kws[self.current] in ENDING:
+                    tokens.append(Token(self.kws[self.current], self.current))
+                    self.advance()
+                else:
+                    raise Exception(f"Expected statement end after {self.current}")
+
             elif self.kws.get(self.current) is not None:
                 raise SyntaxError(f"Invalid syntax near '{self.current}'")
 
             else:
                 ahead = self.look_ahead()
-                if self.kws.get(ahead) not in ASSIGNMENT:
+                if self.kws.get(ahead) in ASSIGNMENT:
+                    name = self.id()
+                    if name in VARS["PREV"]:
+                        tokens.append(Token("PREV", None))
+                    else:
+                        tokens.append(Token("ID", name))
+                    tokens.append(Token(self.kws[self.current], self.current))
+
+                    if self.kws[self.current] == "OBJ ASSIGN":
+                        self.advance()
+                        tokens += self.expr()
+
+                    elif self.kws[self.current] == "STR ASSIGN":
+                        self.advance()
+                        tokens += self.string()
+
+                    elif self.kws[self.current] == "IADD":
+                        self.advance()
+                        tokens += self.expr()
+
+                    else:
+                        raise Exception(f"Expected assignment at {self.current}")
+
+                elif self.kws.get(ahead) in LOOPING:
+                    if self.kws[ahead] == "GOES":
+                        name = self.id()
+                        self.check_name(name)
+                        tokens.append(Token("ID", name))
+
+                        if self.kws.get(self.current) != "GOES":
+                            raise Exception(f"Expected GOES, got {self.current}")
+
+                        tokens.append(Token(self.kws[self.current], self.current))
+                        self.advance()
+
+                        if self.kws.get(self.current) == "FROM":
+                            tokens.append(Token(self.kws[self.current], self.current))
+                            self.advance()
+
+                            tokens += self.expr()
+
+                        if self.kws.get(self.current) == "TO":
+                            tokens.append(Token(self.kws[self.current], self.current))
+                            self.advance()
+
+                            tokens += self.expr()
+                        else:
+                            raise Exception(f"Expected TO, got {self.current}")
+
+                else:
                     tokens += self.expr()
                     continue
 
-                name = self.id()
-                if name in VARS["PREV"]:
-                    tokens.append(Token("PREV", None))
+                if self.kws[self.current] in ENDING:
+                    tokens.append(Token(self.kws[self.current], self.current))
+                    self.advance()
                 else:
-                    tokens.append(Token("ID", name))
-                tokens.append(Token(self.kws[self.current], self.current))
-
-                if self.kws[self.current] == "OBJ ASSIGN":
-                    self.advance()
-                    tokens += self.expr()
-
-                elif self.kws[self.current] == "STR ASSIGN":
-                    self.advance()
-                    tokens += self.string()
-
-                elif self.kws[self.current] == "IADD":
-                    self.advance()
-                    tokens += self.expr()
+                    raise Exception(f"Expected statement end after {self.current}")
 
         return tokens
 
     def id(self):
         name = ""
-        while self.kws.get(self.current) not in ASSIGNMENT + ENDING:
+        while self.kws.get(self.current) not in ASSIGNMENT + ENDING + LOOPING:
             name += f" {self.current}"
             self.advance()
 
             if self.current is None:
                 raise EOFError("End of file while scanning variable name")
 
-        return name.strip()
+        try:
+            int(name.strip()[0])
+            raise Exception(f"Variable names cannot start with integers: {name.strip()}")
+        except ValueError:
+            return name.strip()
 
     def string(self, start=None):
         s = []
@@ -110,11 +178,9 @@ class Lexer(object):
             self.advance()
 
         if start is None:
-            end = Token(self.kws[self.current], self.current)
-            self.advance()
-            return [Token("STR", " ".join(s)), end]
+            return [Token("STR", " ".join(s))]
 
-        self.advance()
+        self.advance()  # pass over ending quote
         return Token("STR", " ".join(s))
 
     def expr(self):
@@ -127,18 +193,19 @@ class Lexer(object):
                 self.advance()
                 expr.append(self.string(start))
 
-            while self.kws.get(self.current) not in STRONGOP + WEAKOP + UNOP + ENDING:
+            while self.kws.get(self.current) not in STRONGOP + WEAKOP + UNOP + ENDING + LOOPING:
                 factor.append(self.current)
                 self.advance()
 
             if any(factor):
                 expr.append(Token("OBJ", " ".join(factor)))
 
-            expr.append(Token(self.kws[self.current], self.current))
-            if self.kws[self.current] in ["END", "LOCAL END"]:
-                self.advance()
+            if self.kws[self.current] in ENDING:
+                break
+            elif self.kws[self.current] in LOOPING:
                 break
 
+            expr.append(Token(self.kws[self.current], self.current))
             self.advance()
 
         return expr

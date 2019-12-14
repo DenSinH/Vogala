@@ -1,7 +1,21 @@
-Peter is niet alleen.
+Peter is niets.
 Klaas is jong.
-Peter is met klaas.
-zeg dat hij gelijk is aan drie.
+zeg dat hij gelijk is aan vier en peter kleiner is dan klaas.
+t = nul, nul.
+print t.
+
+terwijl peter kleiner is dan klaas gebeurde er dit:
+    zeg "while loop".
+
+    iemand loopt van huis naar zijn werk.
+        zeg het.
+        zeg "".
+        een man loopt naar huis.
+            zeg een man!
+        zeg ""!
+
+    peter is met een...
+
 hij is nu elf.
 zeg het.
 
