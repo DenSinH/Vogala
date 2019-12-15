@@ -1,2 +1,2 @@
-# sync
-Just syncing some files for a project I don't know if I'm gonna finish
+# Dutch
+A programming language completely in Dutch, inspired by the [Rockstar programming language](https://codewithrockstar.com/online)!
