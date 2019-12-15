@@ -1,4 +1,6 @@
 {
+  ",": ",",
+
   "+": "ADD",
   "MET": "ADD",
   "PLUS": "ADD",
@@ -38,6 +40,12 @@
   "SLECHTER IS DAN": "LT",
   "<": "LT",
 
+  "ZO KLEIN IS ALS": "LEQ",
+  "ZO ZWAK IS ALS": "LEQ",
+  "ZO WEINIG IS ALS": "LEQ",
+  "ZO SLECHT IS ALS": "LEQ",
+  "<=": "LEQ",
+
   "IS GROTER DAN": "GT",
   "IS STERKER DAN": "GT",
   "IS MEER DAN": "GT",
@@ -47,6 +55,13 @@
   "MEER IS DAN": "GT",
   "BETER IS DAN": "GT",
   ">": "GT",
+
+  "ZO GROOT IS ALS": "GEQ",
+  "ZO STERK IS ALS": "GEQ",
+  "ZO VEEL IS ALS": "GEQ",
+  "ZO GOED IS ALS": "GEQ",
+  ">=": "GEQ",
+
 
   "LIJKT OP": "EQ",
   "==": "EQ",
@@ -75,6 +90,8 @@
   "ZEI DAT": "STR ASSIGN",
   "ZEIDEN DAT": "STR ASSIGN",
 
+  "GEBRUIKT": "FUNC ASSIGN",
+
   "PRINT": "PRINT",
   "ROEP": "PRINT",
   "FLUISTER": "PRINT",
@@ -83,6 +100,7 @@
   "ZEG": "PRINT",
 
   "ALS": "IF",
+  "WANNEER": "IF",
 
   "ANDERS": "ELSE",
 
@@ -112,6 +130,12 @@
   "NAAR": "TO",
   "TOT": "TO",
   "RICHTING": "TO",
+
+  "GA TERUG": "BREAK",
+
+  "OP": "CALL",
+
+  "GEEF ME": "RETURN",
 
   "...": "LOCAL END",
   "!": "LOCAL END",

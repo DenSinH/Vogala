@@ -31,6 +31,18 @@ class Parser(object):
         self.expect("ID")
         return node
 
+    def func(self):
+        name = self.current.val
+        self.expect("FUNC")
+
+        self.expect("CALL")
+        arguments = []
+        while self.current.typ not in ENDING + LOOPING:
+            arguments.append(self.weak())
+            if self.current.typ not in ENDING + LOOPING:
+                self.expect(",")
+        return Call(name, arguments)
+
     def prev(self):
         node = Prev(self.current.val)
         self.expect("PREV")
@@ -50,6 +62,8 @@ class Parser(object):
         elif self.current.typ == "VAR":
             node = Var(self.current.val)
             self.expect(*FACTORS)
+        elif self.current.typ == "FUNC":
+            return self.func()
         elif self.current.typ == "INT":
             node = Int(self.current.val)
             self.expect(*FACTORS)
@@ -69,7 +83,7 @@ class Parser(object):
     def weak(self):
         node = self.strong()
 
-        while self.current.typ not in ENDING + LOOPING:
+        while self.current.typ not in ENDING + LOOPING + [","]:
             op = self.current.typ
 
             self.expect(*WEAKOP)
@@ -83,7 +97,7 @@ class Parser(object):
         if op in STRONGOP:
             self.expect(*STRONGOP)
             return BinOp(left, op, self.strong())
-        elif op in ENDING + WEAKOP + LOOPING:
+        elif op in ENDING + WEAKOP + LOOPING + [","]:
             return left
         else:
             raise Exception(f"Invalid Syntax near {self.current.val}")
@@ -93,8 +107,19 @@ class Parser(object):
             left = self.variable()
             op = self.current.typ
             if self.current.typ in ASSIGNMENT:
+                if self.current.typ == "FUNC ASSIGN":
+                    self.expect(*ASSIGNMENT)
+                    arguments = []
+                    while self.current.typ != "END":
+                        arguments.append(self.current.val)
+                        self.expect("ID")
+                    self.expect("END")
+
+                    return FunctionAssign(left, arguments, self.compound_statement())
+
                 self.expect(*ASSIGNMENT)
                 return Assign(left, op, self.weak())
+
             elif self.current.typ == "GOES":
                 self.expect("GOES")
                 if self.current.typ == "FROM":
@@ -109,6 +134,9 @@ class Parser(object):
                 return For(left, start, end, self.compound_statement())
             else:
                 raise Exception(f"Expected one of {', '.join(ASSIGNMENT)} or GOES, got {self.current.typ}, {self.current.val}")
+
+        elif self.current.typ == "FUNC":
+            return self.func()
 
         elif self.current.typ == "IF":
             self.expect("IF")
@@ -134,6 +162,17 @@ class Parser(object):
             self.expect("PRINT")
             return Print(self.weak())
 
+        elif self.current.typ == "BREAK":
+            self.expect("BREAK")
+            return Break()
+
+        elif self.current.typ == "RETURN":
+            self.expect("RETURN")
+            val = None
+            if self.current.typ not in ENDING:
+                val = self.weak()
+            return Return(val)
+
         elif self.current.typ == "WHILE":
             self.expect("WHILE")
             condition = self.weak()
@@ -151,7 +190,9 @@ class Parser(object):
         children = []
         while self.current is not None and self.current.typ != "LOCAL END":
             children.append(self.statement())
-            if not (isinstance(children[-1], While) or isinstance(children[-1], For)):
+
+            # we have already expected the local end for some statements
+            if not any(isinstance(children[-1], node) for node in (For, While, FunctionAssign, If)):
                 if self.current is not None and self.current.typ != "LOCAL END":
                     self.expect("END")
 
@@ -164,8 +205,6 @@ class Parser(object):
         children = []
         while self.current is not None:
             children.append(self.compound_statement())
-            if self.current is not None:
-                self.expect("LOCAL END")
 
         return Compound(*children)
 

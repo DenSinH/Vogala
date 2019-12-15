@@ -1,4 +1,5 @@
 from Token import *
+from Vartypes import *
 
 
 class Node(object):
@@ -46,6 +47,16 @@ class Var(Node):
         return f"Var({self.name})"
 
 
+class Call(Node):
+
+    def __init__(self, name, arguments):
+        self.name = name
+        self.arguments = arguments
+
+    def __str__(self):
+        return f"Call({self.name}(\n    {', '.join(str(arg) for arg in self.arguments)}\n    ) )"
+
+
 class Object(Node):
 
     def __init__(self, val):
@@ -59,13 +70,13 @@ class Object(Node):
         if self.val in kwargs:
             prev.val = self.val
             return kwargs[self.val]
-        return int("".join(str(len(word) % 10) for word in self.val.split(" ")))
+        return INT(int("".join(str(len(word) % 10) for word in self.val.split(" "))))
 
 
 class Int(Node):
 
     def __init__(self, val):
-        self.val = val
+        self.val = INT(val)
 
     def __str__(self):
         return f"Int({self.val})"
@@ -74,7 +85,7 @@ class Int(Node):
 class Real(Node):
 
     def __init__(self, val):
-        self.val = val
+        self.val = REAL(val)
 
     def __str__(self):
         return f"Real({self.val})"
@@ -83,7 +94,7 @@ class Real(Node):
 class String(Node):
 
     def __init__(self, val):
-        self.val = val
+        self.val = STRING(val)
 
     def __str__(self):
         return f"String({self.val})"
@@ -92,10 +103,21 @@ class String(Node):
 class Bool(Node):
 
     def __init__(self, val):
-        self.val = val
+        self.val = BOOL(val)
 
     def __str__(self):
         return f"String({self.val})"
+
+
+class FunctionAssign(Node):
+
+    def __init__(self, name, arguments, child):
+        self.name = name
+        self.arguments = arguments
+        self.child = child
+
+    def __str__(self):
+        return f"FunctionAssign({self.name}: {', '.join(str(arg) for arg in self.arguments)} => \n    {self.child}\n    )"
 
 
 class Print(Node):
@@ -105,6 +127,21 @@ class Print(Node):
 
     def __str__(self):
         return f"Print({self.val})"
+
+
+class Break(Node):
+
+    def __str__(self):
+        return f"Break"
+
+
+class Return(Node):
+
+    def __init__(self, child):
+        self.child = child
+
+    def __str__(self):
+        return f"Return({self.child})"
 
 
 class Prev(Node):
@@ -140,7 +177,7 @@ class For(Node):
         self.child = child
 
     def __str__(self):
-        return f"For({self.var.name} FROM {self.start} TO {self.end}: {self.child})"
+        return f"For({self.var.name}\n    FROM {self.start}\n    TO {self.end}\n    : {self.child})"
 
 
 class If(Node):

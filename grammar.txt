@@ -9,9 +9,12 @@ compound statement:
 statement:
     |assignment     id (OBJ ASSIGN|STR ASSIGN) expr
     |PRINT expr
+    |OBJ
+    |id CALL argument,*
 
 OP:
     |ADD|SUB|MUL|DIV|OR|AND
 
 expr:
     |NOT? (id|value) (OP NOT? (id|value))*
+    |id CALL argument,*

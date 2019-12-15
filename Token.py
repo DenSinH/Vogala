@@ -6,12 +6,12 @@ with open("vars.json", "r") as f:
     VARS = json.load(f)
 
 
-ASSIGNMENT = ["OBJ ASSIGN", "STR ASSIGN", "IADD", "ISUB"]
+ASSIGNMENT = ["OBJ ASSIGN", "STR ASSIGN", "IADD", "ISUB", "FUNC ASSIGN"]
 ENDING = ["END", "LOCAL END"]
-STRONGOP = ["DIV", "MUL", "LT", "GT", "EQ"]
+STRONGOP = ["DIV", "MUL", "LT", "LEQ", "GT", "GEQ", "EQ"]
 WEAKOP = ["OR", "ADD", "SUB", "AND"]
 UNOP = ["NOT"]
-OPENERS = ["PRINT", "WHILE", "IF", "ELSE"]
+OPENERS = ["PRINT", "WHILE", "IF", "ELSE", "BREAK", "RETURN"]
 LOOPING = ["GOES", "FROM", "TO", "DO"]
 FACTORS = ["OBJ", "STR", "INT", "REAL", "VAR", "BOOL", "PREV"]
 

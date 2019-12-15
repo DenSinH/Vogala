@@ -66,11 +66,21 @@ class Lexer(object):
 
                     tokens += self.expr()
 
-                elif self.kws[self.current] == "WHILE":
+                elif self.kws[self.current] == "BREAK":
+                    tokens.append(Token(self.kws[self.current], self.current))
+                    self.advance()
+
+                elif self.kws[self.current] == "RETURN":
                     tokens.append(Token(self.kws[self.current], self.current))
                     self.advance()
 
                     tokens += self.expr()
+
+                elif self.kws[self.current] == "WHILE":
+                    tokens.append(Token(self.kws[self.current], self.current))
+                    self.advance()
+
+                    tokens += self.expr("DO")
 
                     if self.kws.get(self.current) == "DO":
                         tokens.append(Token(self.kws[self.current], self.current))
@@ -95,6 +105,9 @@ class Lexer(object):
                 else:
                     raise Exception(f"Expected statement end after {self.current}")
 
+            elif self.kws.get(self.current) in ENDING:
+                tokens.append(Token(self.kws[self.current], self.current))
+                self.advance()
             elif self.kws.get(self.current) is not None:
                 raise SyntaxError(f"Invalid syntax near '{self.current}'")
 
@@ -116,12 +129,21 @@ class Lexer(object):
                         self.advance()
                         tokens += self.string()
 
+                    elif self.kws[self.current] == "FUNC ASSIGN":
+                        self.advance()
+
+                        tokens += self.arguments()
+
                     elif self.kws[self.current] == "IADD":
                         self.advance()
                         tokens += self.expr()
 
+                    elif self.kws[self.current] == "ISUB":
+                        self.advance()
+                        tokens += self.expr()
+
                     else:
-                        raise Exception(f"Expected assignment at {self.current}")
+                        raise Exception(f"No assignment added for {self.current}")
 
                 elif self.kws.get(ahead) in LOOPING:
                     if self.kws[ahead] == "GOES":
@@ -139,7 +161,7 @@ class Lexer(object):
                             tokens.append(Token(self.kws[self.current], self.current))
                             self.advance()
 
-                            tokens += self.expr()
+                            tokens += self.expr("TO")
 
                         if self.kws.get(self.current) == "TO":
                             tokens.append(Token(self.kws[self.current], self.current))
@@ -156,16 +178,16 @@ class Lexer(object):
                 if self.kws[self.current] in ENDING:
                     tokens.append(Token(self.kws[self.current], self.current))
                     self.advance()
-                    while self.kws.get(self.current) in ENDING:
-                        self.advance()
                 else:
                     raise Exception(f"Expected statement end after {self.current}")
 
         return tokens
 
-    def id(self):
+    def id(self, *args):
+        # args are extra keywords to take into account (mostly used for , in lists)
         name = ""
-        while self.kws.get(self.current) not in ASSIGNMENT + ENDING + LOOPING:
+        while self.kws.get(self.current) not in ASSIGNMENT + ENDING + ["GOES"] + WEAKOP + STRONGOP + list(args):
+
             name += f" {self.current}"
             self.advance()
 
@@ -177,6 +199,14 @@ class Lexer(object):
             raise Exception(f"Variable names cannot start with integers: {name.strip()}")
         except ValueError:
             return name.strip()
+
+    def arguments(self):
+        arguments = []
+        while self.kws.get(self.current) not in ENDING:
+            arguments.append(Token("ID", self.id(",")))
+            if self.kws.get(self.current) not in ENDING:
+                self.advance()
+        return arguments
 
     def string(self, start=None):
         s = []
@@ -190,7 +220,23 @@ class Lexer(object):
         self.advance()  # pass over ending quote
         return Token("STR", " ".join(s))
 
-    def expr(self):
+    def call(self):
+        call = [Token("FUNC", self.id("CALL"))]
+
+        if self.kws[self.current] == "CALL":
+            call.append(Token(self.kws[self.current], self.current))
+            self.advance()
+        else:
+            raise Exception(f"Expected function call at {self.current}")
+
+        while self.kws.get(self.look_ahead()) == ",":
+            call += self.expr(",", *LOOPING)
+            if self.kws[self.current] == ",":
+                self.advance()
+
+        return call
+
+    def expr(self, *args):
         expr = []
 
         while True:
@@ -200,7 +246,10 @@ class Lexer(object):
                 self.advance()
                 expr.append(self.string(start))
 
-            while self.kws.get(self.current) not in STRONGOP + WEAKOP + UNOP + ENDING + LOOPING:
+            elif self.kws.get(self.look_ahead()) == "CALL":
+                expr += self.call()
+
+            while self.kws.get(self.current) not in STRONGOP + WEAKOP + UNOP + ENDING + list(args):
                 factor.append(self.current)
                 self.advance()
 
