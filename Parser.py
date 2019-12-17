@@ -12,7 +12,10 @@ class Parser(object):
         self.tokens = self.lexer.tokenize()
 
         self.cursor = 0
-        self.current = self.tokens[self.cursor]
+        if self.tokens:
+            self.current = self.tokens[self.cursor]
+        else:
+            self.current = None
 
     def advance(self):
         self.cursor += 1

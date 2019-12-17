@@ -2,6 +2,8 @@ from tkinter import *
 
 from Lexer import Lexer
 from Token import *
+from Interpreter import Interpreter
+import multiprocessing as mp
 
 import json
 import re
@@ -16,10 +18,27 @@ BG = "#333333"
 FG = "#c0c0c0"
 
 
+class Q(object):
+
+    def __init__(self):
+        self.queue = mp.Queue()
+
+    def write(self, string):
+        self.queue.put(string)
+
+    def get(self):
+        res = ""
+        while not self.queue.empty():
+            res += self.queue.get()
+        return res
+
+
 class IDE(object):
 
     def __init__(self, master):
 
+        self.thread = None
+        self.queue = Q()
         self.master = master
 
         self.code = Text(self.master, bg=BG, fg=FG, insertbackground=FG)
@@ -32,14 +51,20 @@ class IDE(object):
         self.old_code = [""]
 
         self.tokens = Text(self.master, state=DISABLED, bg=BG, fg=FG)
-        self.tokens.grid(row=0, column=2, sticky=NS)
+        self.tokens.grid(row=0, column=2, columnspan=3, sticky=NSEW)
 
-        Label(self.master, text="Terminal:", anchor=W).grid(row=1, column=2, sticky=W)
+        Label(self.master, text="Terminal", anchor=W).grid(row=1, column=2, sticky=W)
+        Button(self.master, text="Compile", command=self.compile).grid(row=1, column=3, sticky=EW)
+        self.run_button = Button(self.master, text="Run", command=self.run)
+        self.run_button.grid(row=1, column=4, sticky=EW)
 
         self.terminal = Text(self.master, state=DISABLED, bg=BG, fg=FG)
-        self.terminal.grid(row=2, column=2, sticky=NSEW)
+        self.terminal.grid(row=2, column=2, columnspan=3, sticky=NSEW)
 
-        self.master.columnconfigure(1, weight=1)
+        self.master.columnconfigure(1, weight=3)
+        self.master.columnconfigure(2, weight=1)
+        self.master.columnconfigure(3, weight=1)
+        self.master.columnconfigure(4, weight=1)
         self.master.rowconfigure(0, weight=1)
         self.master.rowconfigure(2, weight=1)
 
@@ -51,6 +76,7 @@ class IDE(object):
 
             self.code.tag_remove("keyword", f"{i + 1}.0", f"{i + 1}.{len(code[i])}")
             self.code.tag_remove("var", f"{i + 1}.0", f"{i + 1}.{len(code[i])}")
+            self.code.tag_remove("prev", f"{i + 1}.0", f"{i + 1}.{len(code[i])}")
 
             for KW in sorted(set(KWS) | {VAR for VARTYP in VARS for VAR in VARS[VARTYP]}, reverse=True):
                 if re.sub(r"\W", "", KW):
@@ -67,6 +93,7 @@ class IDE(object):
 
         self.old_code = code
 
+    def compile(self):
         try:
             self.tokens["state"] = NORMAL
             tokens = Lexer(self.code.get("0.0", END)).tokenize()
@@ -81,7 +108,7 @@ class IDE(object):
                     scope -= 1
 
                 if token.typ in FACTORS + ["ID"]:
-                    translated += " [" + str(token.val or "PREV") + "]"
+                    translated += " [" + str("PREV" if token.val is None else token.val) + "]"
                 elif token.typ in ENDING:
                     translated += "\n" + "    " * scope
                 else:
@@ -93,9 +120,41 @@ class IDE(object):
             self.tokens.insert(END, translated)
             self.tokens["state"] = DISABLED
         except Exception as e:
-            print(e)
+            self.tokens["state"] = NORMAL
+            self.tokens.delete("0.0", END)
+            self.tokens.insert(END, str(e))
+            self.tokens["state"] = DISABLED
             pass
 
+    def run(self):
+
+        if self.thread is None:
+            self.compile()
+            self.thread = mp.Process(target=Interpreter(self.code.get("0.0", END), self.queue).run, daemon=True)
+            self.thread.start()
+            self.master.after(1, self.check)
+            self.run_button["text"] = "Stop"
+
+            self.terminal["state"] = NORMAL
+            self.terminal.delete("0.0", END)
+            self.terminal["state"] = DISABLED
+        else:
+            self.thread.terminate()
+
+    def check(self):
+        self.write()
+        if not self.thread.is_alive():
+            self.thread.join()
+            self.thread = None
+            self.run_button["text"] = "Run"
+        else:
+            self.master.after(1, self.check)
+
+    def write(self):
+        self.terminal["state"] = NORMAL
+        self.terminal.insert(END, self.queue.get())
+        self.terminal.see(END)
+        self.terminal["state"] = DISABLED
 
 
 

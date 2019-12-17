@@ -1,6 +1,7 @@
 from Parser import Parser
 from AST import *
 
+import sys
 from pprint import pprint
 
 
@@ -37,10 +38,11 @@ class __Return__(object):
 
 class Interpreter(object):
 
-    def __init__(self, program):
+    def __init__(self, program, out=sys.stdout):
         self.parser = Parser(program)
         pprint(self.parser.tokens)
         self.tree = self.parser.program()
+        self.out = out
 
     def visit(self, node, prev, scope, _break, _return, loop, function):
         if _break or _return:
@@ -80,7 +82,7 @@ class Interpreter(object):
                 self.visit(node.alternative, prev, scope, _break, _return, loop, function)
 
         elif isinstance(node, Print):
-            print(self.visit(node.val, prev, scope, _break, _return, loop, function))
+            self.out.write(str(self.visit(node.val, prev, scope, _break, _return, loop, function)) + "\n")
         elif isinstance(node, Break):
             if not loop:
                 raise Exception(f"Cannot break from this location node")
@@ -91,6 +93,8 @@ class Interpreter(object):
                 raise Exception(f"Invalid assignment variable: {node.left}")
 
             if isinstance(node.left, Prev):
+                if prev.val is None:
+                    raise Exception(f"No variable was called before.")
                 node.left.name = prev.val
 
             prev.val = node.left.name
@@ -191,9 +195,10 @@ class Interpreter(object):
         _break = __Break__()
         _return = __Return__()
         scope = {}
+        print(self.tree)
         self.visit(self.tree, prev, scope, _break, _return, False, False)
 
-        print("---------------------------END------------------------------")
+        self.out.write("---------------------------END------------------------------")
         # pprint(scope)
 
 

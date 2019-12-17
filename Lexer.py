@@ -21,7 +21,10 @@ class Lexer(object):
         program = re.sub(r"\s+", " ", program.upper())
         self.program = [word.strip() for word in re.split(r"(\W)", program) if word.strip()]
         self.cursor = 0
-        self.current = self.get_after() or self.program[self.cursor]
+        if len(self.program):
+            self.current = self.get_after() or self.program[self.cursor]
+        else:
+            self.current = None
 
     def advance(self):
         if self.current is None:
