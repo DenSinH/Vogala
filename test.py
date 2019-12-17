@@ -1,1 +1,4 @@
-print(True and 5)
+def f(b):
+    return
+
+f()

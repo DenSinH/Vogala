@@ -67,6 +67,18 @@
   "==": "EQ",
   "IS GELIJK AAN": "EQ",
   "GELIJK IS AAN": "EQ",
+  "ZIJN GELIJK AAN": "EQ",
+  "GELIJK ZIJN AAN": "EQ",
+
+  "!=": "NEQ",
+  "IS NIET GELIJK AAN": "NEQ",
+  "NIET GELIJK IS AAN": "NEQ",
+  "IS ANDERS DAN": "NEQ",
+  "ANDERS IS DAN": "NEQ",
+  "ZIJN NIET GELIJK AAN": "NEQ",
+  "NIET GELIJK ZIJN AAN": "NEQ",
+  "ZIJN ANDERS DAN": "NEQ",
+  "ANDERS ZIJN DAN": "NEQ",
 
   "=": "OBJ ASSIGN",
   "IS": "OBJ ASSIGN",
@@ -91,6 +103,7 @@
   "ZEIDEN DAT": "STR ASSIGN",
 
   "GEBRUIKT": "FUNC ASSIGN",
+  "GEBRUIKEN": "FUNC ASSIGN",
 
   "PRINT": "PRINT",
   "ROEP": "PRINT",
@@ -101,10 +114,13 @@
 
   "ALS": "IF",
   "WANNEER": "IF",
+  "AAN DE ENE KANT": "IF",
 
   "ANDERS": "ELSE",
+  "AAN DE ANDERE KANT": "ANDERS",
 
   "TERWIJL": "WHILE",
+  "ZOLANG": "WHILE",
 
   "GEBEURT ER DIT": "DO",
   "GEBEURDE ER DIT": "DO",
@@ -114,6 +130,7 @@
   "DEED HIJ DIT": "DO",
   "DEED ZIJ DIT": "DO",
   "DEDEN ZIJ DIT": "DO",
+  "DOE": "DO",
 
   "GAAT": "GOES",
   "GAAN": "GOES",
@@ -139,9 +156,9 @@
 
   "...": "LOCAL END",
   "!": "LOCAL END",
+  "?": "LOCAL END",
 
   ".": "END",
   ";": "END",
-  ":": "END",
-  "?": "END"
+  ":": "END"
 }

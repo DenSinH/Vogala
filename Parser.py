@@ -7,8 +7,8 @@ from pprint import pprint
 
 class Parser(object):
 
-    def __init__(self):
-        self.lexer = Lexer()
+    def __init__(self, program):
+        self.lexer = Lexer(program)
         self.tokens = self.lexer.tokenize()
 
         self.cursor = 0

@@ -14,13 +14,11 @@ def starts_with(lst, sublst):
 
 class Lexer(object):
 
-    def __init__(self):
+    def __init__(self, program):
         with open("keywords.json", "r") as f:
             self.kws = json.load(f)
 
-        with open("program.va", "r") as f:
-            program = re.sub(r"\s+", " ", f.read().upper())
-
+        program = re.sub(r"\s+", " ", program.upper())
         self.program = [word.strip() for word in re.split(r"(\W)", program) if word.strip()]
         self.cursor = 0
         self.current = self.get_after() or self.program[self.cursor]
@@ -38,6 +36,8 @@ class Lexer(object):
     def get_after(self, start=None):
         if start is None:
             start = int(self.cursor)
+        if start >= len(self.program):
+            return None
 
         for kw in sorted(self.kws, key=lambda _kw: len(split(_kw)), reverse=True):
             if starts_with(self.program[start:], split(kw)):
@@ -46,7 +46,7 @@ class Lexer(object):
 
     def look_ahead(self):
         cur = int(self.cursor)
-        while self.get_after(cur) is None:
+        while cur < len(self.program) and self.get_after(cur) is None:
             cur += 1
         return self.get_after(cur)
 
@@ -238,8 +238,7 @@ class Lexer(object):
 
     def expr(self, *args):
         expr = []
-
-        while True:
+        while self.current is not None:
             factor = []
             if self.current in "'\"":
                 start = str(self.current)
@@ -260,6 +259,8 @@ class Lexer(object):
                 break
             elif self.kws[self.current] in LOOPING:
                 break
+            elif self.current is None:
+                raise EOFError("End of file while scanning expression")
 
             expr.append(Token(self.kws[self.current], self.current))
             self.advance()

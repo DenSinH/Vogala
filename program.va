@@ -1,19 +1,4 @@
-a = 1,1'2;
-b = 2;
-
-c gebruikt k, l en m:
-    d gebruikt k:
-        print "nested functie".
-        print k.
-        geef me k...
-    print k + l - twee maal d op m;
-    print "dit is een functie".
-    geef me k + l - twee maal m...
-
-a loopt naar niet c op 1, 2, 3;
-    print a...
-
-als a < 2:
+a gebruikt b en c:
     print a!
-anders:
-    print "niet waar!"!
+
+print 1.

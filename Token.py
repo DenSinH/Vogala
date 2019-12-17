@@ -8,7 +8,7 @@ with open("vars.json", "r") as f:
 
 ASSIGNMENT = ["OBJ ASSIGN", "STR ASSIGN", "IADD", "ISUB", "FUNC ASSIGN"]
 ENDING = ["END", "LOCAL END"]
-STRONGOP = ["DIV", "MUL", "LT", "LEQ", "GT", "GEQ", "EQ"]
+STRONGOP = ["DIV", "MUL", "LT", "LEQ", "GT", "GEQ", "EQ", "NEQ"]
 WEAKOP = ["OR", "ADD", "SUB", "AND"]
 UNOP = ["NOT"]
 OPENERS = ["PRINT", "WHILE", "IF", "ELSE", "BREAK", "RETURN"]
