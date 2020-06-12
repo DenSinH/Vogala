@@ -27,7 +27,7 @@ A compound statement is really just 0 or more statements. A compound statement i
 A statement can be a few things. For example
 ```id (OBJ ASSIGN|STR ASSIGN) expr```
 which would assign a value `expr` to `id`. Note that variable id's may have spaces in them all you want! My language doesn't care about capitalization either, so the variable `Dennis Hilhorst` would be the same as `DeNnIs    HiLHorSt`. However, it is a different variable than `Den nis Hil horst`.
-A statement can also be a pritn expression, simply
+A statement can also be a print expression, simply
 ```PRINT expr```
 which speaks for itself. You can also have an epxression that is just an object. This can be an integer, a string, an `id` or whatever. The program will basically just ignore this statement. I did this so that you could make your program look more like text! Something I added after all of this was in place was conditionals. You can have an expression of the form
 ```
@@ -181,3 +181,6 @@ INT(67)
 ...
 ```
 Precisely as we had hoped!
+
+#### Adaptability
+If you want to show this to people, you can even define your own default variable names, or your own keywords! You can translate the whole thing to English (or any other language for that matter!) by just changing the "keywords.json" and "vars.json" file!
